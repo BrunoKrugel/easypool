@@ -4,32 +4,30 @@ import (
 	"fmt"
 	"sync"
 	"time"
+
+	"github.com/BrunoKrugel/easypool"
 )
 
 func main() {
-	// Create a WaitGroup to wait for all goroutines to finish
+	worker := easypool.NewPool(5)
+
 	var wg sync.WaitGroup
 
-	// Number of goroutines to create
-	numGoroutines := 5
-
-	// Launch multiple goroutines
-	for i := 0; i < numGoroutines; i++ {
-		wg.Add(1) // Increment the WaitGroup counter
-
-		go func(id int) {
-			defer wg.Done() // Decrement the WaitGroup counter when done
-
-			// Simulate some work
-			fmt.Printf("Goroutine %d started\n", id)
+	//Number of routines to be executed
+	for i := 0; i < 10; i++ {
+		taskNumber := i
+		wg.Add(1)
+		worker.AddToPool(func() {
+			defer wg.Done()
 			time.Sleep(time.Second)
-			fmt.Printf("Goroutine %d completed\n", id)
-		}(i) // Pass 'i' as an argument to the goroutine function
+			fmt.Printf("Task %d executed\n", taskNumber)
+		})
 	}
 
-	// Wait for all goroutines to finish
+	worker.Execute()
 	wg.Wait()
 
-	// All goroutines have completed
+	worker.Close()
+
 	fmt.Println("All goroutines have finished.")
 }
