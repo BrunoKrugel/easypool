@@ -5,10 +5,10 @@ import (
 )
 
 type WorkerPool struct {
-	poolSize int
 	queue    chan func()
-	wg       sync.WaitGroup
 	done     chan struct{}
+	wg       sync.WaitGroup
+	poolSize int
 }
 
 // NewPool creates a new WorkerPool with the specified size.
