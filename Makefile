@@ -18,3 +18,12 @@ all:
 .PHONY: test
 test: # Run the go tests
 	go test ./...
+
+align:
+	- fieldalignment -fix ./...		
+
+imports:
+	goimports -w .
+
+format:
+	go fmt ./...		
